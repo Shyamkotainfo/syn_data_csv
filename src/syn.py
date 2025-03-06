@@ -5,6 +5,7 @@ import sys
 import csv
 from huggingface_hub import InferenceClient
 
+# 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
 generated_set = set()  # Track unique rows
 
 def load_yaml(file_path):
@@ -23,7 +24,7 @@ def load_reference_data(ref_data_path):
 
 def generate_text(prompt):
     """Generate text using Hugging Face API."""
-    client = InferenceClient(api_key="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")  # Replace with your API key
+    client = InferenceClient(api_key="***")  # Replace with your API key
     messages = [{"role": "user", "content": prompt}]
     completion = client.chat.completions.create(  # Corrected method call
         model="mistralai/Mistral-7B-Instruct-v0.3",
