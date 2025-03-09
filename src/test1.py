@@ -4,9 +4,9 @@ import json
 import sys
 import csv
 from groq import Groq  # Import Groq API
-# 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
+
 # Initialize Groq client
-client = Groq(api_key="**")  # Replace with your API key
+client = Groq(api_key="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")  # Replace with your API key
 
 generated_set = set()  # Track unique rows
 
