@@ -32,6 +32,6 @@ columns:
       type: string
 
 row_count:
-    - 1000
+    - 10
 prompt:
     - Generate rows of e-commerce transaction data with realistic values.
