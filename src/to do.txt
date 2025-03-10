@@ -1,0 +1,41 @@
+---- error logging 
+    for llm
+    for large data
+    for invalid csv
+    for invalid yaml
+
+---- retires for llm
+
+---- Test for row_count
+        100
+        200
+        500
+        1000
+        2000
+        3000
+        4000
+        5000
+        10000
+
+---- use classes and other things for structured code
+
+---- use environmental variables
+
+        api_key
+
+
+---- understand the code
+
+
+---- run as package
+
+
+---- validate output
+
+
+
+---- convert csv into if required
+        json
+        parquet
+        excel
+

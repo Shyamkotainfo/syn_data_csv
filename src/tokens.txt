@@ -1,0 +1,3 @@
+hemu hf = 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
+
+hemu_groq = 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

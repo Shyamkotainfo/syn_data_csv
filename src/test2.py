@@ -3,10 +3,13 @@ import pandas as pd
 import json
 import sys
 import csv
-from groq import Groq  # Import Groq API
+from huggingface_hub import InferenceClient  # Import Hugging Face client
 
-# Initialize Groq client
-client = Groq(api_key="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")  # Replace with your API key
+# Initialize Hugging Face client
+client = InferenceClient(
+    provider="hf-inference",
+    api_key="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"  # Replace with your actual Hugging Face API key
+)
 
 generated_set = set()  # Track unique rows
 
@@ -63,27 +66,17 @@ def validate_csv(file_path, expected_columns):
     print("✅ CSV reference file format is valid.")
 
 def generate_text(prompt):
-
-    """Generate text using Groq's Mixtral model."""
+    print("--------------")
+    """Generate text using Hugging Face Mixtral model."""
     messages = [{"role": "user", "content": prompt}]
-    
-    # Call Groq API for text generation
-    completion = client.chat.completions.create(
-        model="mixtral-8x7b-32768",
+
+    completion = client.chat_completion(
+        model="mistralai/Mixtral-8x7B-Instruct-v0.1",
         messages=messages,
-        temperature=1,
-        max_tokens=6000,
-        top_p=1,
-        stream=True
+        max_tokens=4900
     )
 
-    # Capture streamed output
-    response_text = ""
-    for chunk in completion:
-        if chunk.choices and chunk.choices[0].delta and chunk.choices[0].delta.content:
-            response_text += chunk.choices[0].delta.content
-
-    return response_text.strip()
+    return completion.choices[0].message["content"].strip()
 
 def generate_prompt(config, reference_samples):
     """Construct the LLM prompt dynamically."""
@@ -105,13 +98,11 @@ def generate_prompt(config, reference_samples):
     - Ensure the data follows a realistic pattern.
     - Strings shouldn't be in quotes. Ex: ('""user101"" -->incorrect, user101  --> correct)
     - **Replicate the pattern in reference data**
-    - Take count of rows form the user instruction.
     - **Each row must contain exactly {len(config.get("columns", []))} values. No missing or extra fields.**
-    - **Output format: Only comma-separated values (NO HEADER, NO EXTRA TEXT).**'
+    - **Output format: Only comma-separated values (NO HEADER, NO EXTRA TEXT).**
     - **Ensure CSV output has NO extra text, NO headers, NO extra spacing, and is STRICTLY comma-separated.**
+    - **Each row must have exactly {len(config.get("columns", []))} values. No missing or extra fields.**
     - **No excessive quotation marks unless necessary for escaping commas in text fields.**
-
-
 
     ----
     - User instruction: {user_prompt}
@@ -127,33 +118,29 @@ def generate_prompt(config, reference_samples):
 
     return prompt.strip()
 
-def generate_synthetic_data(config, ref_data_path):
-    """Generate synthetic data in batches while ensuring valid CSV format."""
-
-    # Extract total rows from YAML config
-    total_rows = int(config.get("row_count", [100])[0])  # Ensure it's a single value
-    
+def generate_synthetic_data(config, ref_data_path, total_rows=10000):
+    """Generate synthetic data ensuring valid CSV format."""
     column_names = [col["name"] for col in config.get("columns", [])]
     expected_columns = len(column_names)
     
     # Load reference data if provided
     reference_samples = load_reference_data(ref_data_path) if ref_data_path else None
 
-    max_rows_per_batch = 50  # Limit per batch
+    max_tokens_per_request = 6000  # LLM token limit
+    rows_per_request = min(100, total_rows)  # Adjust dynamically
     total_generated_rows = 0
     generated_set = set()
     all_data = []
 
-    while total_generated_rows < total_rows:  
+    while total_generated_rows < total_rows:
         remaining_rows = total_rows - total_generated_rows
-        batch_size = min(max_rows_per_batch, remaining_rows)
-
-        # Adjust prompt dynamically for each batch
+        rows_to_generate = min(rows_per_request, remaining_rows)
+        
+        
         prompt = generate_prompt(config, reference_samples)
+        prompt = prompt.replace(f"Generate {total_rows}", f"Generate {rows_to_generate}")  # Update row count
 
         response = generate_text(prompt)
-        print(f"Batch Response ({total_generated_rows + 1}-{total_generated_rows + batch_size}):", response)
-
         rows = response.strip().split("\n")
 
         for row in rows:
@@ -168,12 +155,10 @@ def generate_synthetic_data(config, ref_data_path):
                 all_data.append(dict(zip(column_names, row_values)))
                 total_generated_rows += 1
 
-            if total_generated_rows >= total_rows:  # Stop when we reach required total rows
-                break
+            if total_generated_rows >= total_rows:
+                break  # Stop if we reach the target
 
-    print("Total Generated Rows:", total_generated_rows)
     return pd.DataFrame(all_data)
-
 
 def main():
     if len(sys.argv) < 3:

@@ -31,5 +31,7 @@ columns:
     - name: OrderStatus
       type: string
 
+row_count:
+    - 1000
 prompt:
-    - Generate 1000 rows of e-commerce transaction data with realistic values.
+    - Generate rows of e-commerce transaction data with realistic values.
