@@ -32,6 +32,6 @@ columns:
       type: string
 
 row_count:
-    - 10
+    - 50
 prompt:
-    - Generate rows of e-commerce transaction data with realistic values.
+    - Generate rows of e-commerce transaction data with realistic values where i can use SQL filtering(where) .
