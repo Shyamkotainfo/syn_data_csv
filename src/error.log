@@ -1,0 +1,5 @@
+2025-03-11 16:20:13,360 - ERROR - LLM request failed: name 'z' is not defined
+2025-03-11 16:20:13,360 - ERROR - LLM request failed: name 'z' is not defined
+2025-03-11 16:20:13,360 - ERROR - LLM request failed: name 'z' is not defined
+2025-03-11 16:20:13,360 - ERROR - LLM request failed: name 'z' is not defined
+2025-03-11 16:20:13,360 - ERROR - LLM retry limit exceeded (3 retries). Aborting data generation.
