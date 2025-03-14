@@ -4,15 +4,18 @@ from groq import Groq  # Import Groq API
 
 from validate import YAMLValidator, CSVValidator
 from generate_data import DataGenerator
-from ouput import OutputHandler
+from output import OutputHandler
 
 class SyntheticDataPipeline:
     """Manages the entire synthetic data generation process."""
 
-    def __init__(self, yaml_file, reference_file, api_key):
+    DEFAULT_API_KEY = "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"
+
+    def __init__(self, yaml_file, reference_file, api_key=None):
         self.yaml_file = yaml_file
         self.reference_file = reference_file
-        self.client = Groq(api_key=api_key)  # Initialize Groq client
+        self.api_key = api_key if api_key else self.DEFAULT_API_KEY
+        self.client = Groq(api_key=self.api_key)  # Initialize Groq client
 
     def run(self):
         """Execute the synthetic data generation pipeline."""
@@ -41,7 +44,9 @@ class SyntheticDataPipeline:
 
 if __name__ == "__main__":
     if len(sys.argv) < 3:
-        print("❌ Usage: python main.py config.yaml test_data.csv")
+        print("❌ Usage: python main.py config.yaml test_data.csv [optional_api_key]")
         sys.exit(1)
-    pipeline = SyntheticDataPipeline(sys.argv[1], sys.argv[2], api_key="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")
+
+    api_key = sys.argv[3] if len(sys.argv) > 3 else None
+    pipeline = SyntheticDataPipeline(sys.argv[1], sys.argv[2], api_key)
     pipeline.run()

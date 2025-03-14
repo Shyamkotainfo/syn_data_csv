@@ -24,20 +24,13 @@
         api_key
 
 
----- understand the code
+---- understand the code ✅
 
 
 ---- run as package
 
 
----- validate output
-
-
-
----- convert csv into if required
-        json
-        parquet
-        excel
+---- validate output 
 
 
 ---- create run book
