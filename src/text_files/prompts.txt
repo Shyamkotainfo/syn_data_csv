@@ -1,0 +1,10 @@
+- Generate synthetic data where OrderAmount varies between 10 and 5000
+- Generate transactions with different OrderStatus values such as 'Pending', 'Delivered', 'Cancelled', and 'Returned'.
+- Generate a transactions where multiple TransactionIDs belong to the same UserID. 
+- Generate a PaymentDetails column as a dictionary
+- Generate e-commerce transactions where ProductName is a list containing multiple product names per transaction
+- Generate e-commerce transaction data where OrderStatus is stored as a set containing multiple state to track multiple statuses at once
+- Generate e-commerce transaction data where Address is stored as a tuple
+- Generate e-commerce transaction data where each UserID has multiple transactions, showing repeat purchase behavior with different OrderAmount, ProductName, and PaymentMethod values
+- Generate e-commerce transaction data where some values in Email and PhoneNumber are NULL to simulate incomplete records.
+- Generate e-commerce transaction data where ProductName is a list containing multiple products per order.
