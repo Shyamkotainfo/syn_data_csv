@@ -8,3 +8,55 @@
 - Generate e-commerce transaction data where each UserID has multiple transactions, showing repeat purchase behavior with different OrderAmount, ProductName, and PaymentMethod values
 - Generate e-commerce transaction data where some values in Email and PhoneNumber are NULL to simulate incomplete records.
 - Generate e-commerce transaction data where ProductName is a list containing multiple products per order.
+- Generate synthetic e-commerce data ensuring Address fields contain city and state names.
+- Generate transactions where some users have repeated purchases with different TransactionID values.
+- Generate transaction records where Email follows a realistic format and PhoneNumber is a valid 10-digit number.
+- Generate realistic e-commerce transactions with SQL-filterable fields like OrderAmount and OrderStatus.
+- Generate e-commerce orders with at least 2 products per transaction and varying OrderStatus values.
+- Generate e-commerce transactions with UserID as a string of alphanumeric characters.
+- Generate customer records where Email follows a valid format (e.g., user@example.com).
+- Generate users with duplicate Email addresses.
+- Generate transactions where ProductName list contains more than 5 items.
+- Generate orders where the city in Address tuple is 'Los Angeles'.
+- Generate orders where at least one product is from 'Electronics' category.
+- Generate transactions where Email contains an underscore.
+- Generate PaymentMethod dictionaries where the payment method is always 'Online'.
+- Generate transactions where ProductName contains both 'Phone' and 'Case' in a single order.
+- Generate orders where the PaymentMethod dictionary has an odd number of key-value pairs.
+- Generate orders where ProductName contains at least one item with 'Pro' in its name.
+- Generate orders where the first and last item in ProductName list are the same.
+- Generate transactions where UserID starts with '00' but ends with a letter.
+- Generate orders where OrderStatus contains exactly one status.
+- Generate orders where the street name contains an abbreviation (e.g., "St.", "Ave.", "Blvd.").
+- Generate transactions where ProductName contains duplicate items.
+- Generate orders where PaymentMethod dictionary has an invalid data type for a key.
+- Generate users where the sum of all their OrderAmounts is greater than 10,000.
+- Generate transactions where the minimum OrderAmount for a UserID is greater than 200.
+- Generate transactions where the numeric part of TransactionID is a multiple of 5.
+- Generate users where Email contains the first 3 characters of their UserName.
+- Generate transactions where ProductName contains an item name longer than 20 characters.
+- Generate transactions where PaymentMethod dictionary contains an invalid key (e.g., 'xyz_key').
+- Generate orders where the length of Email before '@' is greater than 10 characters.
+- Generate orders where the PaymentMethod dictionary contains a 'discount' key.
+- Generate orders where OrderAmount follows an increasing sequence (i.e., each subsequent order has a higher amount).
+- Generate orders where OrderStatus contains "Completed" and OrderAmount is greater than 500.  
+- Generate orders where OrderStatus contains "Completed" and the dictionary PaymentMethod has a key "is_verified" with value `true`.  
+- Generate orders where OrderStatus contains only "Failed".  
+- Generate users where PhoneNumber follows the pattern (XX-YY-ZZ) where X, Y, and Z are repeating digits.
+- Generate transactions where the PaymentMethod dictionary has a key with an empty string as its value.
+- Generate transactions where OrderAmount contains only even digits (e.g., 246.88, 802.44).
+- Generate transactions where OrderAmount contains only odd digits
+- Generate transactions where ProductName contains items from at least two different categories.  
+- Generate orders where OrderStatus contains only "Failed" and "Pending" in the same set.  
+
+
+
+
+
+
+
+
+
+
+
+
