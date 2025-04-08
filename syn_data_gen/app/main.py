@@ -2,11 +2,11 @@ import pandas as pd
 import sys
 from groq import Groq # Import Groq API
 
-from validate import load_yaml, validate_yaml, validate_csv
-from generate_data import generate_synthetic_data
+from app.validate import load_yaml, validate_yaml, validate_csv
+from app.generate_data import generate_synthetic_data
 
 # Initialize Groq client
-client = Groq(api_key="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")  # Replace with your API key
+client = Groq(api_key="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")  # Replace with your API key
 generated_set = set()  # Track unique rows
 
 

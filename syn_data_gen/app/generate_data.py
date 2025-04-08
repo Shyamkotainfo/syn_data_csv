@@ -1,8 +1,8 @@
 import pandas as pd
 import csv
 
-from validate import load_reference_data
-from generate_text_prompt import generate_prompt, generate_text
+from app.validate import load_reference_data
+from app.generate_text_prompt import generate_prompt, generate_text
 
 
 

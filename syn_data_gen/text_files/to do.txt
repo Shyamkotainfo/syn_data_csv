@@ -44,3 +44,12 @@
 
 
 --- test code with different prompts.
+
+
+--- crew.ai, autogen, langraph
+
+--- Directory 
+
+--- .whl
+
+---- model - groq, bedrock, openai
