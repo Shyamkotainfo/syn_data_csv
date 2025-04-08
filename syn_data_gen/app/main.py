@@ -2,8 +2,8 @@ import pandas as pd
 import sys
 from groq import Groq # Import Groq API
 
-from app.validate import load_yaml, validate_yaml, validate_csv
-from app.generate_data import generate_synthetic_data
+from syn_data_gen.app.validate import load_yaml, validate_yaml, validate_csv
+from syn_data_gen.app.generate_data import generate_synthetic_data
 
 # Initialize Groq client
 client = Groq(api_key="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")  # Replace with your API key
