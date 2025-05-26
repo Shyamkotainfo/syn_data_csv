@@ -58,3 +58,48 @@ def validate_csv(file_path, expected_columns):
         raise ValueError(f"CSV is getting more columns: {extra_columns}")
 
     print("✅ CSV reference file format is valid.")
+
+
+yaml_file = None
+reference_file = None
+
+# Handle case where last two args are API key and model
+    if len(args) >= 2 and not args[-2].endswith(('.yaml', '.yml', '.csv')):
+        api_key = args[-2]
+        model = args[-1]
+        file_args = args[:-2]
+    elif len(args) >= 1 and not args[-1].endswith(('.yaml', '.yml', '.csv')):
+        api_key = args[-1]
+        file_args = args[:-1]
+    else:
+        file_args = args
+
+    # Identify YAML and CSV files
+    for arg in file_args:
+        if arg.endswith(('.yaml', '.yml')):
+            yaml_file = arg
+        elif arg.endswith('.csv'):
+            reference_file = arg
+
+    if not yaml_file and not reference_file:
+        print("❌ No valid .yaml or .csv files provided.")
+        print("✅ Usage: python test1.py <file.yaml> <file.csv> [api_key] [model]")
+        sys.exit(1)
+
+    # Load YAML configuration
+    config = load_yaml(yaml_file)
+
+    # Validate YAML format
+    try:
+        validate_yaml(config)
+    except ValueError as e:
+        print(f"❌ YAML validation error: {e}")
+        sys.exit(1)
+
+    # Validate CSV format
+    expected_columns = [col["name"] for col in config["columns"]]
+    try:
+        validate_csv(reference_file, expected_columns)
+    except ValueError as e:
+        print(f"❌ CSV validation error: {e}")
+        sys.exit(1)

@@ -6,36 +6,19 @@ from syn_data_gen.app.validate import load_yaml, validate_yaml, validate_csv
 from syn_data_gen.app.generate_data import generate_synthetic_data
 
 # Initialize Groq client
-client = Groq(api_key="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")  # Replace with your API key
+client = Groq(api_key="")  # Replace with your API key
 generated_set = set()  # Track unique rows
 
 
 def main():
 
-    if len(sys.argv) < 3:
-        print("❌ Usage: python test1.py config.yaml test_data.csv")
-        sys.exit(1)
+    # import from constansts.py
+    api_key = DEFAULT_API_KEY
+    model = DEFAULT_MODEL
 
-    yaml_file = sys.argv[1]
-    reference_file = sys.argv[2]
+    args = sys.argv[1:]
 
-    # Load YAML configuration
-    config = load_yaml(yaml_file)
-
-    # Validate YAML format
-    try:
-        validate_yaml(config)
-    except ValueError as e:
-        print(f"❌ YAML validation error: {e}")
-        sys.exit(1)
-
-    # Validate CSV format
-    expected_columns = [col["name"] for col in config["columns"]]
-    try:
-        validate_csv(reference_file, expected_columns)
-    except ValueError as e:
-        print(f"❌ CSV validation error: {e}")
-        sys.exit(1)
+    
 
     # Generate synthetic data
     df = generate_synthetic_data(config, reference_file, client)
