@@ -27,11 +27,11 @@ def validate_csv(file_path):
     print("✅ CSV reference file format is valid.")
 
 
-yaml_file = None
-reference_file = None
-
-
 def process_and_validate_files(args):
+
+    yaml_file = None
+    config = None
+    reference_file = None
 
     if len(args) >= 2 and not args[-2].endswith(('.yaml', '.yml', '.csv')):
         api_key = args[-2]
@@ -55,11 +55,9 @@ def process_and_validate_files(args):
         print("✅ Usage: python test1.py <file.yaml> <file.csv> [api_key] [model]")
         sys.exit(1)
 
-    # Load YAML configuration
-    config = load_yaml(yaml_file)
-
     # Validate YAML format
     if yaml_file:
+        config = load_yaml(yaml_file)
         try:
             validate_yaml(config)
         except ValueError as e:

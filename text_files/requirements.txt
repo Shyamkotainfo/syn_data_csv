@@ -3,4 +3,5 @@ pandas
 json
 sys
 csv
-groq 
+groq
+python-dotenv

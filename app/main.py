@@ -1,9 +1,9 @@
 import sys
 
 from app.validate_files import process_and_validate_files
-from app.ai_acceleratos import get_api_key_model
-# from app.generate_data import generate_synthetic_data
-# from app.output import generate_ouput
+from app.ai_accelerators import get_api_key_model
+from app.generate_data import generate_synthetic_data
+from app.output import generate_ouput
 
 
 def main():
