@@ -1,33 +1,25 @@
-import pandas as pd
 import sys
-from groq import Groq # Import Groq API
 
-from syn_data_gen.app.validate import load_yaml, validate_yaml, validate_csv
-from syn_data_gen.app.generate_data import generate_synthetic_data
-
-# Initialize Groq client
-client = Groq(api_key="")  # Replace with your API key
-generated_set = set()  # Track unique rows
+from app.validate_files import process_and_validate_files
+from app.ai_acceleratos import get_api_key_model
+# from app.generate_data import generate_synthetic_data
+# from app.output import generate_ouput
 
 
 def main():
 
-    # import from constansts.py
-    api_key = DEFAULT_API_KEY
-    model = DEFAULT_MODEL
-
+    # Process and validate files
     args = sys.argv[1:]
+    config, reference_file = process_and_validate_files(args)
 
+    # Get API Key and Model
+    api_key, model = get_api_key_model()
     
-
     # Generate synthetic data
-    df = generate_synthetic_data(config, reference_file, client)
+    df = generate_synthetic_data(config, reference_file, api_key, model)
     
-    if not df.empty:
-        df.to_csv("synthetic_data.csv", index=False)
-        print("✅ Synthetic data saved to synthetic_data.csv")
-    else:
-        print("❌ No valid data to save.")
+    # Save Synthetic data
+    generate_ouput(df)
 
 if __name__ == "__main__":
     main()

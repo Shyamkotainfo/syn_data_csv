@@ -8,16 +8,6 @@ def load_yaml(file_path):
         return yaml.safe_load(file)
 
 
-def load_reference_data(ref_data_path):
-    """Load reference CSV file if provided."""
-    try:
-        df = pd.read_csv(ref_data_path)
-        return df.head(5).to_dict(orient="records")  
-    except Exception as e:
-        print(f"⚠️ Warning: Could not load csv data: {e}")
-        return None
-
-
 def validate_yaml(config):
     """Validate the structure of the YAML configuration file."""
     required_keys = {"columns", "prompt"}
@@ -25,37 +15,14 @@ def validate_yaml(config):
     if not isinstance(config, dict):
         raise ValueError("YAML configuration should be a dictionary.")
 
-    missing_keys = required_keys - config.keys()
-    if missing_keys:
-        raise ValueError(f"Missing required keys in YAML: {missing_keys}")
-
-    if not isinstance(config["columns"], list) or not all(isinstance(col, dict) for col in config["columns"]):
-        raise ValueError("Invalid format for 'columns' in YAML. It should be a list of dictionaries.")
-
-    for col in config["columns"]:
-        if "name" not in col or "type" not in col:
-            raise ValueError(f"Each column must have 'name' and 'type' fields. Found: {col}")
-
     print("✅ YAML configuration format is valid.")
 
-def validate_csv(file_path, expected_columns):
+def validate_csv(file_path):
     """Validate the CSV reference file format without enforcing column order."""
     try:
         df = pd.read_csv(file_path, nrows=5)  # Read only the first few rows
     except Exception as e:
         raise ValueError(f"Error reading CSV file: {e}")
-
-    actual_columns = set(df.columns)
-    expected_columns_set = set(expected_columns)
-
-    missing_columns = expected_columns_set - actual_columns
-    extra_columns = actual_columns - expected_columns_set
-
-    if missing_columns:
-        raise ValueError(f"CSV is missing expected columns: {missing_columns}")
-    
-    if extra_columns:
-        raise ValueError(f"CSV is getting more columns: {extra_columns}")
 
     print("✅ CSV reference file format is valid.")
 
@@ -63,7 +30,9 @@ def validate_csv(file_path, expected_columns):
 yaml_file = None
 reference_file = None
 
-# Handle case where last two args are API key and model
+
+def process_and_validate_files(args):
+
     if len(args) >= 2 and not args[-2].endswith(('.yaml', '.yml', '.csv')):
         api_key = args[-2]
         model = args[-1]
@@ -90,16 +59,19 @@ reference_file = None
     config = load_yaml(yaml_file)
 
     # Validate YAML format
-    try:
-        validate_yaml(config)
-    except ValueError as e:
-        print(f"❌ YAML validation error: {e}")
-        sys.exit(1)
+    if yaml_file:
+        try:
+            validate_yaml(config)
+        except ValueError as e:
+            print(f"❌ YAML validation error: {e}")
+            sys.exit(1)
 
     # Validate CSV format
-    expected_columns = [col["name"] for col in config["columns"]]
-    try:
-        validate_csv(reference_file, expected_columns)
-    except ValueError as e:
-        print(f"❌ CSV validation error: {e}")
-        sys.exit(1)
+    if reference_file:
+        try:
+            validate_csv(reference_file)
+        except ValueError as e:
+            print(f"❌ CSV validation error: {e}")
+            sys.exit(1)
+
+    return config, reference_file
