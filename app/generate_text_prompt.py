@@ -2,7 +2,7 @@ import json
 
 from app.constants import MAX_BATCH_SIZE
 
-def generate_prompt(config, reference_samples, column_names, expected_columns):
+def generate_prompt(config, ref_data, column_names, expected_columns):
 
     """Construct the LLM prompt dynamically."""
     num_rows = MAX_BATCH_SIZE
@@ -13,7 +13,7 @@ def generate_prompt(config, reference_samples, column_names, expected_columns):
             [f"- {col['name']} ({col['type']})" for col in config.get('columns', [])]
         )
     
-    elif reference_samples:
+    elif not ref_data.empty:
         user_prompt = """Generate a csv file"""
         column_definitions = column_names
 

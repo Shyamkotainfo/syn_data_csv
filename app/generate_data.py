@@ -3,9 +3,9 @@ import csv
 
 from app.generate_text_prompt import generate_prompt
 from app.ai_accelerators import generate_text_from_llm
-from app.constants import MAX_DEFAULT_ROWS
+from app.constants import MAX_DEFAULT_ROWS, MAX_BATCH_SIZE
 
-def extract_total_rows_columns(config, ref_data):
+def _extract_total_rows_columns(config, ref_data):
     
     if config and "row_count" in config:
         try:
@@ -16,14 +16,14 @@ def extract_total_rows_columns(config, ref_data):
     # Fallback if no config or invalid value
     return MAX_DEFAULT_ROWS
 
-def get_columns(config, ref_data):
+def _get_columns(config, ref_data):
 
     if config and "columns" in config:
         column_names = [col["name"] for col in config["columns"]]
         expected_columns = len(column_names)
 
-    elif ref_data:
-        column_names = df.columns.tolist()
+    elif not ref_data.empty:
+        column_names = ref_data.columns.tolist()
         expected_columns = len(column_names)
 
     return column_names, expected_columns
@@ -32,10 +32,10 @@ def get_columns(config, ref_data):
 def generate_synthetic_data(config, ref_data, api_key, model):
     """Generate synthetic data in batches while ensuring valid CSV format."""
 
-    total_rows = extract_total_rows_columns(config, ref_data)
-    column_names, expected_columns = get_columns(config, ref_data)
+    total_rows = _extract_total_rows_columns(config, ref_data)
+    column_names, expected_columns = _get_columns(config, ref_data)
     
-    max_rows_per_batch = 50  # Limit per batch
+    max_rows_per_batch = MAX_BATCH_SIZE  # Limit per batch
     total_generated_rows = 0
     generated_set = set()
     all_data = []
@@ -48,7 +48,7 @@ def generate_synthetic_data(config, ref_data, api_key, model):
         prompt = generate_prompt(config, ref_data, column_names, expected_columns)
 
         response = generate_text_from_llm(prompt, api_key, model)
-        print(f"Batch Response ({total_generated_rows + 1}-{total_generated_rows + batch_size}):", response)
+        # print(f"Batch Response ({total_generated_rows + 1}-{total_generated_rows + batch_size}):", response)
 
         rows = response.strip().split("\n")
 
