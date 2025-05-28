@@ -1,7 +1,7 @@
 import pandas as pd
 import csv
 
-from app.generate_text_prompt import generate_prompt, generate_text
+from app.generate_text_prompt import generate_prompt
 from app.ai_accelerators import generate_text_from_llm
 from app.constants import MAX_DEFAULT_ROWS
 
@@ -9,7 +9,7 @@ def extract_total_rows_columns(config, ref_data):
     
     if config and "row_count" in config:
         try:
-            return int(config["row_count"])
+            return int((config.get("row_count", MAX_DEFAULT_ROWS))[0])
         except ValueError:
             print("⚠️  Invalid row_count in config. Using default.")
     
@@ -47,7 +47,7 @@ def generate_synthetic_data(config, ref_data, api_key, model):
         # Adjust prompt dynamically for each batch
         prompt = generate_prompt(config, ref_data, column_names, expected_columns)
 
-        response = generate_text(prompt, api_key, model)
+        response = generate_text_from_llm(prompt, api_key, model)
         print(f"Batch Response ({total_generated_rows + 1}-{total_generated_rows + batch_size}):", response)
 
         rows = response.strip().split("\n")
