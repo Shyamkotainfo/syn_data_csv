@@ -23,8 +23,9 @@ def validate_csv(file_path):
         df = pd.read_csv(file_path, nrows=5)  # Read only the first few rows
     except Exception as e:
         raise ValueError(f"Error reading CSV file: {e}")
-
+    
     print("✅ CSV reference file format is valid.")
+    return df
 
 
 def process_and_validate_files(args):
@@ -67,7 +68,7 @@ def process_and_validate_files(args):
     # Validate CSV format
     if reference_file:
         try:
-            validate_csv(reference_file)
+            reference_file = validate_csv(reference_file)
         except ValueError as e:
             print(f"❌ CSV validation error: {e}")
             sys.exit(1)

@@ -34,6 +34,28 @@ def get_api_key_model():
     return api_key, model
 
 
-# # Initialize Groq client
-# client = Groq(api_key="")  # Replace with your API key
-# generated_set = set()  # Track unique rows
+def generate_text_from_llm(prompt, api_key, model):
+
+    # Initialize Groq client
+    client = Groq(api_key=api_key)  # Replace with your API key
+
+    """Generate text using Groq's Mixtral model."""
+    messages = [{"role": "user", "content": prompt}]
+    
+    # Call Groq API for text generation
+    completion = client.chat.completions.create(
+        model=model,
+        messages=messages,
+        temperature=1,
+        max_tokens=6000,
+        top_p=1,
+        stream=True
+    )
+
+    # Capture streamed output
+    response_text = ""
+    for chunk in completion:
+        if chunk.choices and chunk.choices[0].delta and chunk.choices[0].delta.content:
+            response_text += chunk.choices[0].delta.content
+
+    return response_text.strip()

@@ -1,23 +1,40 @@
 import pandas as pd
 import csv
 
-from syn_data_gen.app.validate import load_reference_data
-from syn_data_gen.app.generate_text_prompt import generate_prompt, generate_text
+from app.generate_text_prompt import generate_prompt, generate_text
+from app.ai_accelerators import generate_text_from_llm
+from app.constants import MAX_DEFAULT_ROWS
 
+def extract_total_rows_columns(config, ref_data):
+    
+    if config and "row_count" in config:
+        try:
+            return int(config["row_count"])
+        except ValueError:
+            print("⚠️  Invalid row_count in config. Using default.")
+    
+    # Fallback if no config or invalid value
+    return MAX_DEFAULT_ROWS
 
+def get_columns(config, ref_data):
 
-def generate_synthetic_data(config, ref_data_path, client):
+    if config and "columns" in config:
+        column_names = [col["name"] for col in config["columns"]]
+        expected_columns = len(column_names)
+
+    elif ref_data:
+        column_names = df.columns.tolist()
+        expected_columns = len(column_names)
+
+    return column_names, expected_columns
+
+    
+def generate_synthetic_data(config, ref_data, api_key, model):
     """Generate synthetic data in batches while ensuring valid CSV format."""
 
-    # Extract total rows from YAML config
-    total_rows = int(config.get("row_count", [100])[0])  # Ensure it's a single value
+    total_rows = extract_total_rows_columns(config, ref_data)
+    column_names, expected_columns = get_columns(config, ref_data)
     
-    column_names = [col["name"] for col in config.get("columns", [])]
-    expected_columns = len(column_names)
-    
-    # Load reference data if provided
-    reference_samples = load_reference_data(ref_data_path) if ref_data_path else None
-
     max_rows_per_batch = 50  # Limit per batch
     total_generated_rows = 0
     generated_set = set()
@@ -28,9 +45,9 @@ def generate_synthetic_data(config, ref_data_path, client):
         batch_size = min(max_rows_per_batch, remaining_rows)
 
         # Adjust prompt dynamically for each batch
-        prompt = generate_prompt(config, reference_samples)
+        prompt = generate_prompt(config, ref_data, column_names, expected_columns)
 
-        response = generate_text(prompt, client)
+        response = generate_text(prompt, api_key, model)
         print(f"Batch Response ({total_generated_rows + 1}-{total_generated_rows + batch_size}):", response)
 
         rows = response.strip().split("\n")
