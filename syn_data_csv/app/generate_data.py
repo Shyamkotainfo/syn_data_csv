@@ -2,7 +2,7 @@ import pandas as pd
 import csv
 
 from generate_text_prompt import generate_prompt
-from ai_accelerators import generate_text_from_llm
+from llm_providers import generate_text_from_llm
 from constants import MAX_DEFAULT_ROWS, MAX_BATCH_SIZE
 
 def _extract_total_rows_columns(config, ref_data):
@@ -29,7 +29,7 @@ def _get_columns(config, ref_data):
     return column_names, expected_columns
 
     
-def generate_synthetic_data(config, ref_data, api_key, model):
+def generate_synthetic_data(config, ref_data, provider, api_key, model):
     """Generate synthetic data in batches while ensuring valid CSV format."""
 
     total_rows = _extract_total_rows_columns(config, ref_data)
@@ -47,7 +47,7 @@ def generate_synthetic_data(config, ref_data, api_key, model):
         # Adjust prompt dynamically for each batch
         prompt = generate_prompt(config, ref_data, column_names, expected_columns)
 
-        response = generate_text_from_llm(prompt, api_key, model)
+        response = generate_text_from_llm(prompt, provider, api_key, model)
         # print(f"Batch Response ({total_generated_rows + 1}-{total_generated_rows + batch_size}):", response)
 
         rows = response.strip().split("\n")

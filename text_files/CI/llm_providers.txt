@@ -1,0 +1,8 @@
+LLM providers or AI Model Clients
+
+Provider | API Client/SDK |	Auth Method |	Notes
+Hugging Face	huggingface_hub, transformers	Token (Bearer)	For hosted or local models
+Groq	groq SDK or raw REST call	API key	High-speed inference for open models
+Google (Gemini)	google.generativeai (Python SDK)	OAuth or API key	Requires setup in Google Cloud Console
+OpenAI	openai Python SDK	API key	GPT-3.5, GPT-4, etc.
+Anthropic	anthropic Python SDK	API key	Claude 3 models (Sonnet, Opus, Haiku)
