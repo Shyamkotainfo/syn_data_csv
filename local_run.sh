@@ -1,6 +1,6 @@
 # python test_code.py config.yaml test_data.csv
 
-python app/main.py ./config_files/config.yaml ./datasets/test_data.csv
+python syn_data_csv/app/main.py ./config_files/config.yaml ./datasets/test_data.csv
 
 uv run app/main.py ./config_files/config.yaml ./datasets/test_data.csv
 

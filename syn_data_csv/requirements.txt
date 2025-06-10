@@ -1,4 +1,0 @@
-pandas
-groq
-python-dotenv
-pyyaml

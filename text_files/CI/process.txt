@@ -10,3 +10,4 @@ create runbook
 make as python package
 Deploy in github actions
 Add as docker image if possible
+Add prompt manually --- try
