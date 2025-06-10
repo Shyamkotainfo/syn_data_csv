@@ -34,9 +34,9 @@ def get_api_key_model():
         "groq": [
             "llama3-70b-8192",
             "llama3-8b-8192",
-            "mixtral-8x7b-32768",
-            "gemma-7b-it",
-            "mistral-7b-instruct"
+            "mistral-saba-24b",
+            "gemma-9b-it",
+            "deepseek-r1-distill-llama-70b"
         ],
         "huggingface": [
             "HuggingFaceH4/zephyr-7b-beta",
