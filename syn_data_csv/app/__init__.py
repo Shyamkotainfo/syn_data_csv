@@ -1,1 +1,1 @@
-print("My name is shyam")
+from .main import main

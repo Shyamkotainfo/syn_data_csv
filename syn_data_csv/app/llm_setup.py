@@ -1,4 +1,4 @@
-from constants import DEFAULTS, SUPPORTED_PROVIDERS
+from .constants import DEFAULTS, SUPPORTED_PROVIDERS
 
 def get_api_key_model():
     """

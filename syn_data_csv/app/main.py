@@ -1,9 +1,9 @@
 import sys
 
-from validate_files import process_and_validate_files
-from llm_setup import get_api_key_model
-from generate_data import generate_synthetic_data
-from output import generate_ouput
+from .validate_files import process_and_validate_files
+from .llm_setup import get_api_key_model
+from .generate_data import generate_synthetic_data
+from .output import generate_ouput
 
 
 def main():

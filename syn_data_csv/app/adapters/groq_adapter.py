@@ -1,5 +1,5 @@
 from groq import Groq
-from adapters.base import BaseChatAdapter
+from app.adapters.base import BaseChatAdapter
 
 class GroqChatAdapter(BaseChatAdapter):
 

@@ -1,9 +1,9 @@
 import pandas as pd
 import csv
 
-from generate_text_prompt import generate_prompt
-from llm_providers import generate_text_from_llm
-from constants import MAX_DEFAULT_ROWS, MAX_BATCH_SIZE
+from .generate_text_prompt import generate_prompt
+from .llm_providers import generate_text_from_llm
+from .constants import MAX_DEFAULT_ROWS, MAX_BATCH_SIZE
 
 def _extract_total_rows_columns(config, ref_data):
     

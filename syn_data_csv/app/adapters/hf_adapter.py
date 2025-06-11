@@ -1,5 +1,5 @@
 import requests
-from adapters.base import BaseChatAdapter
+from app.adapters.base import BaseChatAdapter
 
 class HuggingFaceChatAdapter(BaseChatAdapter):
     def generate(self, prompt):

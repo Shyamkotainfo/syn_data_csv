@@ -1,5 +1,5 @@
-from adapters.groq_adapter import GroqChatAdapter
-from adapters.hf_adapter import HuggingFaceChatAdapter
+from app.adapters.groq_adapter import GroqChatAdapter
+from app.adapters.hf_adapter import HuggingFaceChatAdapter
 
 
 def generate_text_from_llm(prompt, provider, api_key, model):
