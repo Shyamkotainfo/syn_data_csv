@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "syn_data_csv"
-version = "0.1.1"
+version = "0.1.5"
 description = "Synthetic data generation using LLMs"
 readme = "README.md"
 authors = [
