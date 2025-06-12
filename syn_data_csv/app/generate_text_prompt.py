@@ -1,6 +1,6 @@
 import json
 
-from app.constants import MAX_BATCH_SIZE
+from .constants import MAX_BATCH_SIZE
 
 def generate_prompt(config, ref_data, column_names, expected_columns):
 
