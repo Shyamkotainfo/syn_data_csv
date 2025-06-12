@@ -1,7 +1,0 @@
-yaml
-pandas
-json
-sys
-csv
-groq
-python-dotenv
