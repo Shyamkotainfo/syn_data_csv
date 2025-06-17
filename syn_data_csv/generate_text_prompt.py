@@ -1,6 +1,6 @@
 import json
 
-from .constants import MAX_BATCH_SIZE
+from syn_data_csv.constants import MAX_BATCH_SIZE
 
 def generate_prompt(config, ref_data, column_names, expected_columns):
 

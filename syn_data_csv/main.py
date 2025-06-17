@@ -6,7 +6,7 @@ from .generate_data import generate_synthetic_data
 from .output import generate_ouput
 
 
-def main():
+def get_csv_data():
 
     # Process and validate files
     args = sys.argv[1:]
@@ -22,4 +22,4 @@ def main():
     generate_ouput(df)
 
 if __name__ == "__main__":
-    main()
+    get_csv_data()
