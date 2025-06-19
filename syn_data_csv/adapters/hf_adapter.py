@@ -1,10 +1,22 @@
-import requests
+import os
+from huggingface_hub import InferenceClient
 from syn_data_csv.adapters.base import BaseChatAdapter
 
 class HuggingFaceChatAdapter(BaseChatAdapter):
+    def __init__(self, api_key, model):
+        self.api_key = api_key
+        self.model = model
+        self.client = InferenceClient(
+            token=self.api_key,
+        )
+
     def generate(self, prompt):
-        headers = {"Authorization": f"Bearer {self.api_key}"}
-        payload = {"inputs": prompt}
-        url = f"https://api-inference.huggingface.co/models/{self.model}"
-        response = requests.post(url, headers=headers, json=payload)
-        return response.json()[0]["generated_text"]
+        # Use chat API if the model supports chat (like Mixtral)
+        response = self.client.chat.completions.create(
+            model=self.model,
+            messages=[
+                {"role": "user", "content": prompt}
+            ],
+        )
+
+        return response.choices[0].message["content"]

@@ -9,7 +9,7 @@ def get_api_key_model():
     print("--------------------------------------------------")
 
     # Prompt for provider
-    print("Choose a provider (or press Enter to use default 'groq'):")
+    print("Choose a Inference provider (or press Enter to use default 'groq'):")
     for i, provider in enumerate(SUPPORTED_PROVIDERS, 1):
         print(f"  {i}. {provider.title()}")
 
@@ -33,17 +33,17 @@ def get_api_key_model():
     models_by_provider = {
         "groq": [
             "llama3-70b-8192",
-            "llama3-8b-8192",
+            "meta-llama/llama-guard-4-12b",
             "mistral-saba-24b",
-            "gemma-9b-it",
-            "deepseek-r1-distill-llama-70b"
+            "gemma2-9b-it",
+            "meta-llama/llama-prompt-guard-2-86m"
         ],
         "huggingface": [
             "HuggingFaceH4/zephyr-7b-beta",
-            "mistralai/Mistral-7B-Instruct-v0.2",
+            "openchat/openchat-3.5-1210",
             "google/gemma-7b-it",
             "microsoft/Phi-3-mini-4k-instruct",
-            "NousResearch/Nous-Hermes-2-Mistral-7B-DPO"
+            "TinyLLaMA/TinyLLaMA-1.1B-Chat-v1.0"
         ]
     }
 

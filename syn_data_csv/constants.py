@@ -10,16 +10,17 @@ with open(CONFIG_PATH, 'r') as f:
 
 # Access keys safely
 GROQ_API_KEY = config.get("GROQ_API")
-DEFAULT_MODEL = config.get("MODEL", "mistral-saba-24b")
+HF_API_KEY = config.get("HF_API")
+
 
 DEFAULTS = {
     "groq": {
         "api_key": GROQ_API_KEY,
-        "model": "llama3-8b-8192"
+        "model": "llama3-70b-8192"
     },
     "huggingface": {
-        "api_key": "your-huggingface-api-key",
-        "model": "HuggingFaceH4/zephyr-7b-beta"
+        "api_key": HF_API_KEY,
+        "model": "mistralai/Mixtral-8x7B-Instruct-v0.1"
     }
 }
 
