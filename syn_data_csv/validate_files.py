@@ -1,6 +1,7 @@
 import yaml
 import sys
 import pandas as pd
+import csv
 
 
 def load_yaml(file_path):
@@ -18,15 +19,30 @@ def validate_yaml(config):
 
     print("✅ YAML configuration format is valid.")
 
+
 def validate_csv(file_path):
-    """Validate the CSV reference file format without enforcing column order."""
+    """Validate the CSV reference file format and detect separator."""
     try:
-        df = pd.read_csv(file_path, nrows=5)  # Read only the first few rows
+        # Read a small sample to guess the delimiter
+        with open(file_path, 'r', encoding='utf-8') as f:
+            sample = f.read(2048)
+            try:
+                dialect = csv.Sniffer().sniff(sample)
+                delimiter = dialect.delimiter
+                print(f"✅ Detected delimiter: '{delimiter}'")
+            except csv.Error:
+                # Fallback to semicolon if sniffing fails
+                delimiter = ';'
+                print("⚠️ Could not detect delimiter. Using fallback delimiter ';'")
+
+        # Now read using the detected or fallback delimiter
+        df = pd.read_csv(file_path, sep=delimiter, nrows=5)
+        print("✅ CSV reference file format is valid.")
+
+        return df, delimiter
+
     except Exception as e:
         raise ValueError(f"Error reading CSV file: {e}")
-    
-    print("✅ CSV reference file format is valid.")
-    return df
 
 
 def process_and_validate_files(args):
@@ -69,9 +85,9 @@ def process_and_validate_files(args):
     # Validate CSV format
     if reference_file:
         try:
-            reference_file = validate_csv(reference_file)
+            reference_file, delimiter = validate_csv(reference_file)
         except ValueError as e:
             print(f"❌ CSV validation error: {e}")
             sys.exit(1)
 
-    return config, reference_file
+    return config, reference_file, delimiter

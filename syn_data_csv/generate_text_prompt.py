@@ -2,43 +2,49 @@ import json
 
 from syn_data_csv.constants import MAX_BATCH_SIZE
 
-def generate_prompt(config, ref_data, column_names, expected_columns):
+def generate_prompt(config=None, ref_data=None, column_names=None, expected_columns=None, total_rows=None):
 
     """Construct the LLM prompt dynamically."""
     num_rows = MAX_BATCH_SIZE
 
-    if config: 
-        user_prompt = config.get("prompt", [""])[0]  # Extract user-given text
+    user_prompt = ""
+    column_definitions = ""
+
+    if config:
+        # Extract user prompt and column definitions from config
+        user_prompt = config.get("prompt", [""])[0]
         column_definitions = "\n".join(
             [f"- {col['name']} ({col['type']})" for col in config.get('columns', [])]
         )
-    
-    elif not ref_data.empty:
-        user_prompt = """Generate a csv file"""
-        column_definitions = column_names
+
+    if ref_data is not None and not ref_data.empty:
+        # Reference-only case or adding reference to config case
+        ref_preview = ref_data.head(3).to_csv(index=False)
+        if not config:
+            user_prompt = f"Generate synthetic data based on this reference sample:\n{ref_preview}"
+            column_definitions = ", ".join(ref_data.columns)
+        else:
+            user_prompt += f"\nAlso use the following reference data as format guidance:\n{ref_preview}"
 
 
     prompt = f"""
-    Generate {num_rows} unique rows of synthetic data in CSV format with these columns:
+    Generate exactly {num_rows} unique rows of synthetic data in **CSV format only** with these columns:
     {column_definitions}
 
     **Rules:**
+    - 🚫 DO NOT include headers, explanations, summaries, or additional text.
+    - ✅ Output ONLY comma-separated values. No markdown. No bullets. No formatting.
+    - ✅ Each row must have exactly {expected_columns} fields — strictly match the column count.
+    - ✅ Strings should **NOT** be wrapped in quotes unless the string contains special characters (like commas or quotes) that require escaping. For example: `user101` ✅, not `"user101"` ❌.
+    - ✅ DO NOT say things like "And so on..." or "I've generated...".
+    - ✅ Do NOT wrap your response in code blocks (```, markdown).
+    - ✅ Do NOT add any trailing text, commentary, or notes after the rows.
+    - ✅ Each row must be unique. You must follow the realistic structure and values seen in reference data.
 
-    - Data format: CSV only.
-    - Rows must be unique; columns need not be unique.
-    - Include at least one primary key.
-    - Ensure the data follows a realistic pattern.
-    - Strings shouldn't be in quotes. Ex: ('""user101"" -->incorrect, user101  --> correct)
-    - **Replicate the pattern in reference data**
-    - Take count of rows form the user instruction.
-    - **Each row must contain exactly {expected_columns} values. No missing or extra fields.**
-    - **Output format: Only comma-separated values (NO HEADER, NO EXTRA TEXT).**'
-    - **Ensure CSV output has NO extra text, NO headers, NO extra spacing, and is STRICTLY comma-separated.**
-    - **No excessive quotation marks unless necessary for escaping commas in text fields.**
+    If reference data is provided, mimic its structure and values precisely.
 
-
-
-    ----
-    - User instruction: {user_prompt}
+    Output:
+    - CSV only. No header. No explanation. Just raw comma-separated rows.
+    - **User instruction: {user_prompt}
     """
     return prompt.strip()

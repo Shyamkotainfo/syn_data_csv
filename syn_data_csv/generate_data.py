@@ -1,5 +1,6 @@
 import pandas as pd
 import csv
+from tqdm import tqdm
 
 from .generate_text_prompt import generate_prompt
 from .llm_providers import generate_text_from_llm
@@ -39,33 +40,34 @@ def generate_synthetic_data(config, ref_data, provider, api_key, model):
     total_generated_rows = 0
     generated_set = set()
     all_data = []
+    with tqdm(total=total_rows, desc="Generating synthetic data") as pbar:
+        while total_generated_rows < total_rows:  
+            remaining_rows = total_rows - total_generated_rows
+            batch_size = min(max_rows_per_batch, remaining_rows)
 
-    while total_generated_rows < total_rows:  
-        remaining_rows = total_rows - total_generated_rows
-        batch_size = min(max_rows_per_batch, remaining_rows)
+            # Adjust prompt dynamically for each batch
+            prompt = generate_prompt(config, ref_data, column_names, expected_columns, total_rows)
 
-        # Adjust prompt dynamically for each batch
-        prompt = generate_prompt(config, ref_data, column_names, expected_columns)
+            response = generate_text_from_llm(prompt, provider, api_key, model)
+            # print(f"Batch Response ({total_generated_rows + 1}-{total_generated_rows + batch_size}):", response)
 
-        response = generate_text_from_llm(prompt, provider, api_key, model)
-        # print(f"Batch Response ({total_generated_rows + 1}-{total_generated_rows + batch_size}):", response)
+            rows = response.strip().split("\n")
 
-        rows = response.strip().split("\n")
+            for row in rows:
+                row_values = next(csv.reader([row], quotechar='"'))  # Proper CSV parsing
 
-        for row in rows:
-            row_values = next(csv.reader([row], quotechar='"'))  # Proper CSV parsing
+                if len(row_values) != expected_columns:
+                    continue  # Skip invalid rows
 
-            if len(row_values) != expected_columns:
-                continue  # Skip invalid rows
-
-            row_tuple = tuple(row_values)
-            if row_tuple not in generated_set:
+                row_tuple = tuple(row_values)
                 generated_set.add(row_tuple)
                 all_data.append(dict(zip(column_names, row_values)))
                 total_generated_rows += 1
 
-            if total_generated_rows >= total_rows:  # Stop when we reach required total rows
-                break
+                pbar.update(1)  # update progress bar by one row
+
+                if total_generated_rows >= total_rows:  # Stop when we reach required total rows
+                    break
 
     print("Total Generated Rows:", total_generated_rows)
     return pd.DataFrame(all_data)
