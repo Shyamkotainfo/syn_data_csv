@@ -33,7 +33,7 @@ def get_api_key_model():
     models_by_provider = {
         "groq": [
             "llama3-70b-8192",
-            "meta-llama/llama-guard-4-12b",
+            "llama-3.3-70b-versatile",
             "mistral-saba-24b",
             "gemma2-9b-it",
             "meta-llama/llama-prompt-guard-2-86m"

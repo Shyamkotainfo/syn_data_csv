@@ -6,7 +6,7 @@ from .generate_text_prompt import generate_prompt
 from .llm_providers import generate_text_from_llm
 from .constants import MAX_DEFAULT_ROWS, MAX_BATCH_SIZE
 
-def _extract_total_rows_columns(config, ref_data):
+def _extract_total_rows(config, ref_data):
     
     if config and "row_count" in config:
         try:
@@ -33,7 +33,7 @@ def _get_columns(config, ref_data):
 def generate_synthetic_data(config, ref_data, provider, api_key, model):
     """Generate synthetic data in batches while ensuring valid CSV format."""
 
-    total_rows = _extract_total_rows_columns(config, ref_data)
+    total_rows = _extract_total_rows(config, ref_data)
     column_names, expected_columns = _get_columns(config, ref_data)
     
     max_rows_per_batch = MAX_BATCH_SIZE  # Limit per batch
