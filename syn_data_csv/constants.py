@@ -1,17 +1,11 @@
-import yaml
 import os
+from dotenv import load_dotenv
 
-# Get the absolute path to the config.yaml file in the same directory
-CONFIG_PATH = os.path.join(os.path.dirname(__file__), 'config.yaml')
 
-# Read the YAML file
-with open(CONFIG_PATH, 'r') as f:
-    config = yaml.safe_load(f)
+load_dotenv() 
 
-# Access keys safely
-GROQ_API_KEY = config.get("GROQ_API")
-HF_API_KEY = config.get("HF_API")
-
+GROQ_API_KEY = os.getenv("GROQ_API")
+HF_API_KEY = os.getenv("HF_API")
 
 DEFAULTS = {
     "groq": {
@@ -27,4 +21,4 @@ DEFAULTS = {
 SUPPORTED_PROVIDERS = ["groq", "huggingface"]
 
 MAX_BATCH_SIZE = 100
-MAX_DEFAULT_ROWS = 1000
+MAX_DEFAULT_ROWS = 100

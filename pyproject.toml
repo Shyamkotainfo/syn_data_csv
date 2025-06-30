@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "syn_data_csv"
-version = "0.1.11"
+version = "0.2.0"
 description = "Synthetic data generation using LLMs"
 readme = "README.md"
 
@@ -26,6 +26,8 @@ dependencies = [
     "python-dotenv>=1.1.0",
     "pyyaml>=6.0.2",
     "requests>=2.32.4",
+    "tqdm>=4.66.4",
+    "huggingface_hub>=0.23.0"
 ]
 
 [project.optional-dependencies]

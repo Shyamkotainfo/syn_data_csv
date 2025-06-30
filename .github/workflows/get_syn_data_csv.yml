@@ -3,18 +3,33 @@ name: Synthetic CSV Data
 on:
   workflow_dispatch:
     inputs:
-      csv_filename:
-        description: 'CSV input filename (in inputs/ folder)'
+      csv_content:
+        description: 'Paste CSV content here'
         required: true
-        default: 'input.csv'
+        default: |
+          userid,age,salary
+          1,25,50000
 
-      config_filename:
-        description: 'Config YAML filename (in inputs/ folder)'
+      config_content:
+        description: 'Paste YAML config content here'
         required: true
-        default: 'config.yaml'
+        default: |
+          row_count: [100]
+          columns:
+            - name: userid
+              type: integer
+            - name: age
+              type: integer
+            - name: salary
+              type: integer
 
       api_key:
-        description: 'Select API provider'
+        description: 'API key for LLM provider'
+        required: false
+        default: 'your-default-api-key'  # You can leave this blank or pre-fill a placeholder
+
+      provider:
+        description: 'API Provider'
         required: false
         default: 'groq'
         type: choice
@@ -23,7 +38,7 @@ on:
           - huggingface
 
       model:
-        description: 'Select model name'
+        description: 'Model Name'
         required: false
         default: 'mistral-saba-24b'
         type: choice
@@ -33,11 +48,6 @@ on:
           - mistral-saba-24b
           - gemma-9b-it
           - deepseek-r1-distill-llama-70b
-
-      custom_param:
-        description: 'Optional parameter (like mode/date)'
-        required: false
-        default: 'manual_run'
 
 jobs:
   run-python:
@@ -57,17 +67,27 @@ jobs:
           python -m pip install --upgrade pip
           pip install pandas pyyaml
 
-      - name: Run Python Script with Inputs
+      - name: Create input files
         run: |
-          echo "Running with model: ${{ github.event.inputs.model }} and provider: ${{ github.event.inputs.api_key }}"
-          python script.py \
-            "inputs/${{ github.event.inputs.csv_filename }}" \
-            "inputs/${{ github.event.inputs.config_filename }}" \
-            "${{ github.event.inputs.custom_param }}" \
-            "${{ github.event.inputs.api_key }}" \
-            "${{ github.event.inputs.model }}"
+          mkdir -p inputs
+          echo "${{ github.event.inputs.csv_content }}" > inputs/input.csv
+          echo "${{ github.event.inputs.config_content }}" > inputs/config.yaml
 
-      - name: Upload Output as Artifact
+      - name: Run Python Script
+        run: |
+          echo "🔐 Using provider: ${{ github.event.inputs.provider }}"
+          echo "🧠 Using model: ${{ github.event.inputs.model }}"
+          echo "🔑 API Key: ${{ github.event.inputs.api_key:0:5 }}***** (hidden in logs)"
+
+          python script.py \
+            "inputs/input.csv" \
+            "inputs/config.yaml" \
+            "manual_run" \
+            "${{ github.event.inputs.provider }}" \
+            "${{ github.event.inputs.model }}" \
+            "${{ github.event.inputs.api_key }}"
+
+      - name: Upload Output
         uses: actions/upload-artifact@v4
         with:
           name: processed-output

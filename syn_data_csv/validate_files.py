@@ -76,6 +76,7 @@ def process_and_validate_files(args):
     # Validate YAML format
     if yaml_file:
         config = load_yaml(yaml_file)
+        delimiter = ','
         try:
             validate_yaml(config)
         except ValueError as e:
