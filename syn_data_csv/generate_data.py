@@ -7,16 +7,20 @@ from .llm_providers import generate_text_from_llm
 from .constants import MAX_DEFAULT_ROWS, MAX_BATCH_SIZE
 
 def _extract_total_rows(config, ref_data):
-    
+    """Extract the total number of rows to generate from config or user input."""
     if config and "row_count" in config:
         try:
-            return int((config.get("row_count", MAX_DEFAULT_ROWS))[0])
-        except ValueError:
-            print("⚠️  Invalid row_count in config. Using default.")
+            return int(config["row_count"][0])
+        except (ValueError, TypeError, IndexError):
+            print("⚠️  Invalid or missing row_count in config. Using default.")
     
-    # Fallback if no config or invalid value
+    try:
+        rows = int(input("How many rows do you want to generate? "))
+        return rows
+    except ValueError:
+        print("⚠️  Invalid input. Using default row count.")
+    
     return MAX_DEFAULT_ROWS
-
 def _get_columns(config, ref_data):
 
     if config and "columns" in config:

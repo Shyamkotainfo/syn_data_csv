@@ -2,6 +2,7 @@ import yaml
 import sys
 import pandas as pd
 import csv
+import os
 
 
 def load_yaml(file_path):
@@ -50,6 +51,8 @@ def process_and_validate_files(args):
     yaml_file = None
     config = None
     reference_file = None
+    csv_filename = None
+    yaml_filename = None
 
     if len(args) >= 2 and not args[-2].endswith(('.yaml', '.yml', '.csv')):
         api_key = args[-2]
@@ -78,6 +81,7 @@ def process_and_validate_files(args):
         config = load_yaml(yaml_file)
         delimiter = ','
         try:
+            yaml_filename = os.path.basename(yaml_file)
             validate_yaml(config)
         except ValueError as e:
             print(f"❌ YAML validation error: {e}")
@@ -86,9 +90,10 @@ def process_and_validate_files(args):
     # Validate CSV format
     if reference_file:
         try:
+            csv_filename = os.path.basename(reference_file)
             reference_file, delimiter = validate_csv(reference_file)
         except ValueError as e:
             print(f"❌ CSV validation error: {e}")
             sys.exit(1)
 
-    return config, reference_file, delimiter
+    return config, reference_file, delimiter, yaml_filename, csv_filename
