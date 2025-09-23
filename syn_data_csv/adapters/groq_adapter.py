@@ -1,3 +1,4 @@
+# groq_adapter.py
 from groq import Groq, GroqError
 from syn_data_csv.adapters.base import BaseChatAdapter
 

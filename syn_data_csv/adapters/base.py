@@ -1,3 +1,4 @@
+# base.py
 class BaseChatAdapter:
     def __init__(self, api_key, model):
         self.api_key = api_key

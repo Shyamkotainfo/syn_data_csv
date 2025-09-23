@@ -1,4 +1,6 @@
-from .constants import DEFAULTS, SUPPORTED_PROVIDERS
+# llm_setup.py
+
+from syn_data_csv.utils.constants import DEFAULTS, SUPPORTED_PROVIDERS
 
 def get_api_key_model():
     """
@@ -32,7 +34,7 @@ def get_api_key_model():
     # Define top models for each provider
     models_by_provider = {
         "groq": [
-            "llama3-70b-8192",
+            "openai/gpt-oss-120b",
             "llama-3.3-70b-versatile",
             "mistral-saba-24b",
             "gemma2-9b-it",
